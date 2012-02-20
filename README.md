@@ -30,4 +30,4 @@ environment with the `error_reporting` variable set to `E_ALL | E_STRICT`.
 
 ## License ##
 
-The code for Predis is distributed under the terms of the MIT license (see LICENSE).
+The code for Inflect is distributed under the terms of the MIT license (see LICENSE).
