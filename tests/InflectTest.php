@@ -51,6 +51,11 @@ class InflectTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('Ильина Эдуарда', $this->object->getInflectName('Ильин Эдуард', 0));
 		$this->assertEquals('Гроша Кирилла', $this->object->getInflectName('Грош Кирилл', 0));
 		$this->assertEquals('Грош Марии', $this->object->getInflectName('Грош Мария', 0));
+		$this->assertEquals('Максимова Максима', $this->object->getInflectName('Максимов Максим', 0));
+		$this->assertEquals('Козлова Акакия Акакиевича', $this->object->getInflectName('Козлов Акакий Акакиевич', 0));
+		$this->assertEquals('Москвича Алексия Ларионовича', $this->object->getInflectName('Москвич Алексий Ларионович', 0));
+		$this->assertEquals('Морфенова Онуфрия', $this->object->getInflectName('Морфенов Онуфрий', 0));
+		$this->assertEquals('Морфенова Евлампия', $this->object->getInflectName('Морфенов Евлампий', 0));
 	}
 
 }
