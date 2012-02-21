@@ -34,7 +34,7 @@ class InflectTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(Inflect::MALE, $this->object->getGender('Иванов Игорь'));
 		$this->assertEquals(Inflect::MALE, $this->object->getGender('Иванов Виталий'));
 		$this->assertEquals(Inflect::MALE, $this->object->getGender('Иванов Александр'));
-		$this->assertEquals(Inflect::MALE, $this->object->getGender('Грошь Кирилл'));
+		$this->assertEquals(Inflect::MALE, $this->object->getGender('Грош Кирилл'));
 	}
 
 	public function testShouldReturnGenitiveName() {
