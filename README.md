@@ -12,6 +12,12 @@ $obj = new Inflect();
 echo $obj->getInflectName('Иванов Иван Иванович', 0);
 ```
 
+## TODO ##
+
+- склонятор для всех слов
+- перевод в множественное число
+- перевод цифр в нужный формат
+
 ## Contributing ##
 
 If you want to work on Inflect, it is highly recommended that you first run the test suite in order to
