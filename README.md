@@ -9,7 +9,7 @@
 require_once 'Inflect.php';
 
 $obj = new Inflect();
-echo $obj->getInflectName('Иванов Иван Иванович', 0);
+echo $obj->getInflectName('Иванов Иван Иванович', 0); // Иванова Ивана Ивановича
 ```
 
 ## TODO ##
