@@ -82,9 +82,9 @@ class Inflect {
 		$this->gender = $this->getGender();
 		$this->case = $case;
 		
-		$this->prepareMiddleName();
-		$this->prepareFirstName();
-		$this->prepareLastName();
+		$this->processingMiddleName();
+		$this->processingFirstName();
+		$this->processingLastName();
 
 		 return sprintf(
 				'%s%s%s',
@@ -131,13 +131,27 @@ class Inflect {
 		return null;
 	}
 
-	protected function prepareLastName() {
+	/**
+	 * Обработка множеств (склонение существительных после числительных)
+	 *
+	 * @param array $titles	Варианты слова (час, часа, часов)
+	 * @param int $number Число, которое нужно перевести
+	 * @param bool $full Если true, то возвращать вместе с цифрой
+	 * @return string
+	 */
+	public function getPlural(array $titles, $number, $full = false) {
+	    $result = $titles[(($number % 10 == 1) && ($number % 100 != 11)) ? 0 : ((($number % 10 >= 2) && ($number % 10 <= 4) && (($number % 100 < 10) || ($number % 100 >= 20))) ? 1 : 2)];
+	    $result = $full ? $number . ' ' . $result : $result;
+	    return $result;
+	}
+
+	protected function processingLastName() {
 		if (!is_null($this->lastName) && !is_null($this->gender)) {
 			switch (true) {
-				case preg_match('/[еёиоуыэю]$/ui', $this->lastName):
-				case preg_match('/[аеёиоуыэюя]а$/ui', $this->lastName):
-				case preg_match('/[ёоуыэю]я$/ui', $this->lastName):
-				case preg_match('/[иы]х$/ui', $this->lastName):
+				case preg_match('/[еёиоуыэю]$/u', $this->lastName):
+				case preg_match('/[аеёиоуыэюя]а$/u', $this->lastName):
+				case preg_match('/[ёоуыэю]я$/u', $this->lastName):
+				case preg_match('/[иы]х$/u', $this->lastName):
 					break;
 				default:
 					if($this->replaceProcessing('last', 'lastName')) {
@@ -156,15 +170,15 @@ class Inflect {
 		return $this;
 	}
 
-	protected function prepareFirstName() {
+	protected function processingFirstName() {
 		if (!is_null($this->firstName)) {
 			$this->firstName = preg_replace('/Пётр$/u', 'Петр', $this->firstName);
 
 			switch (true) {
-				case preg_match('/[еёиоуыэю]$/ui', $this->firstName):
-				case preg_match('/[аеёиоуыэюя]а$/ui', $this->firstName):
-				case preg_match('/[аёоуыэюя]я$/ui', $this->firstName):
-				case $this->gender == self::FEMALE && preg_match('/[бвгджзклмнйпрстфхцчшщ]$/ui', $this->firstName):
+				case preg_match('/[еёиоуыэю]$/u', $this->firstName):
+				case preg_match('/[аеёиоуыэюя]а$/u', $this->firstName):
+				case preg_match('/[аёоуыэюя]я$/u', $this->firstName):
+				case $this->gender == self::FEMALE && preg_match('/[бвгджзклмнйпрстфхцчшщ]$/u', $this->firstName):
 					break;
 				case $this->gender == self::MALE && preg_match('/ь$/u', $this->firstName):
 					$value = array('я', 'ю', 'я', 'ем', 'е');
@@ -186,7 +200,7 @@ class Inflect {
 		return $this;
 	}
 
-	protected function prepareMiddleName() {
+	protected function processingMiddleName() {
 		if (!is_null($this->middleName)) {
 			if($this->replaceProcessing('middle', 'middleName')) {
 				return $this;
@@ -213,7 +227,7 @@ class Inflect {
 	}
 
 	private function explodeName($fullName) {
-		list($this->lastName, $this->firstName, $this->middleName) = explode(' ', trim($fullName));
+		list($this->lastName, $this->firstName, $this->middleName) = explode(' ', ucwords(trim($fullName)));
 	}
 
 }

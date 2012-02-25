@@ -2,6 +2,8 @@
 /**
  * @author Igor Gavrilov <igor.gavrilov@softline.ru>
  */
+error_reporting(E_ALL ^ E_NOTICE);
+
 require_once __DIR__ . '/../Inflect.php';
 
 class InflectTest extends PHPUnit_Framework_TestCase {
@@ -36,6 +38,13 @@ class InflectTest extends PHPUnit_Framework_TestCase {
      */
     public function testShouldReturnGenitiveName($a, $b) {
 	$this->assertEquals($b, $this->obj->getInflectName($a, 0));
+    }
+
+    public function testShouldReturnRightPlural() {
+	$array = array('час', 'часа', 'часов');
+	$this->assertEquals('21 час', $this->obj->getPlural($array, 21, true));
+	$this->assertEquals('часа', $this->obj->getPlural($array, 22));
+	$this->assertEquals('часов', $this->obj->getPlural($array, 26));
     }
 
     public function caseProvider() {
