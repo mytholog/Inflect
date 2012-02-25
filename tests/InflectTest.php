@@ -2,62 +2,61 @@
 /**
  * @author Igor Gavrilov <igor.gavrilov@softline.ru>
  */
-
-require_once dirname(__FILE__) . '/../Inflect.php';
+require_once __DIR__ . '/../Inflect.php';
 
 class InflectTest extends PHPUnit_Framework_TestCase {
 
-	protected $object;
+    protected $obj;
 
-	protected function setUp() {
-		$this->object = new Inflect();
+    protected function setUp() {
+	$this->obj = new Inflect();
+    }
+
+    public function testShouldReturnGenderByMiddleName() {
+	$this->assertEquals(Inflect::MALE, $this->obj->getGender('Кац Саша Иванович'));
+	$this->assertEquals(Inflect::FEMALE, $this->obj->getGender('Кац Саша Ивановна'));
+    }
+
+    /**
+     * @dataProvider genderMaleProvider
+     */
+    public function testShouldReturnMaleGender($a) {
+	$this->assertEquals(Inflect::MALE, $this->obj->getGender($a));
+    }
+
+    /**
+     * @dataProvider genderFemaleProvider
+     */
+    public function testShouldReturnFemaleGender($a) {
+	$this->assertEquals(Inflect::FEMALE, $this->obj->getGender($a));
+    }
+
+    /**
+     * @dataProvider caseProvider 
+     */
+    public function testShouldReturnGenitiveName($a, $b) {
+	$this->assertEquals($b, $this->obj->getInflectName($a, 0));
+    }
+
+    public function caseProvider() {
+	return $this->parseFile('case.csv');
+    }
+
+    public function genderMaleProvider() {
+	return $this->parseFile('m_gender.csv');
+    }
+
+    public function genderFemaleProvider() {
+	return $this->parseFile('f_gender.csv');
+    }
+
+    protected function parseFile($file) {
+	$data = array();
+	foreach (file(__DIR__ . '/_files/' . $file, FILE_SKIP_EMPTY_LINES) as $line) {
+	    $data[] = explode(";", trim($line));
 	}
 
-	public function testShouldReturnGenderByMiddleName() {
-		$this->assertEquals(Inflect::MALE, $this->object->getGender('Иванов Иван Иванович'));
-		$this->assertEquals(Inflect::FEMALE, $this->object->getGender('Иванова Ирина Ивановна'));
-	}
-
-	public function testShouldReturnGenderByLastName() {
-		$this->assertEquals(Inflect::FEMALE, $this->object->getGender('Иванова Ирина'));
-		$this->assertEquals(Inflect::FEMALE, $this->object->getGender('Гагарина Наталья'));
-		$this->assertEquals(Inflect::FEMALE, $this->object->getGender('Васильева Наталья'));
-		$this->assertEquals(Inflect::MALE, $this->object->getGender('Иванов Илья'));
-		$this->assertEquals(Inflect::MALE, $this->object->getGender('Галицин Илья'));
-		$this->assertEquals(Inflect::MALE, $this->object->getGender('Васильев Алексей'));
-	}
-
-	public function testShouldReturnGenderByFirstName() {
-		$this->assertEquals(Inflect::FEMALE, $this->object->getGender('Иванова Ирина'));
-		$this->assertEquals(Inflect::FEMALE, $this->object->getGender('Иванова Мария'));
-		$this->assertEquals(Inflect::FEMALE, $this->object->getGender('Грошь Ольга'));
-		$this->assertEquals(Inflect::MALE, $this->object->getGender('Иванов Игорь'));
-		$this->assertEquals(Inflect::MALE, $this->object->getGender('Иванов Виталий'));
-		$this->assertEquals(Inflect::MALE, $this->object->getGender('Иванов Александр'));
-		$this->assertEquals(Inflect::MALE, $this->object->getGender('Грош Кирилл'));
-	}
-
-	public function testShouldReturnGenitiveName() {
-		$this->assertEquals('Иванова Ивана Ивановича', $this->object->getInflectName('Иванов Иван Иванович', 0));
-		$this->assertEquals('Белой Марии Ивановны', $this->object->getInflectName('Белая Мария Ивановна', 0));
-		$this->assertEquals('Ивановой Ольги Ивановны', $this->object->getInflectName('Иванова Ольга Ивановна', 0));
-		$this->assertEquals('Иванова Петра Ивановича', $this->object->getInflectName('Иванов Пётр Иванович', 0));
-		$this->assertEquals('Волковой Анны Павловны', $this->object->getInflectName('Волкова Анна Павловна', 0));
-		$this->assertEquals('Соколовой Инны', $this->object->getInflectName('Соколова Инна', 0));
-		$this->assertEquals('Кац Саши', $this->object->getInflectName('Кац Саша', 0));
-		$this->assertEquals('Репка Ильи', $this->object->getInflectName('Репка Илья', 0));
-		$this->assertEquals('Чайковского Петра Ильича', $this->object->getInflectName('Чайковский Пётр Ильич', 0));
-		$this->assertEquals('Ильиных Романа', $this->object->getInflectName('Ильиных Роман', 0));
-		$this->assertEquals('Ильина Эдуарда', $this->object->getInflectName('Ильин Эдуард', 0));
-		$this->assertEquals('Гроша Кирилла', $this->object->getInflectName('Грош Кирилл', 0));
-		$this->assertEquals('Грош Марии', $this->object->getInflectName('Грош Мария', 0));
-		$this->assertEquals('Максимова Максима', $this->object->getInflectName('Максимов Максим', 0));
-		$this->assertEquals('Козлова Акакия Акакиевича', $this->object->getInflectName('Козлов Акакий Акакиевич', 0));
-		$this->assertEquals('Москвича Алексия Ларионовича', $this->object->getInflectName('Москвич Алексий Ларионович', 0));
-		$this->assertEquals('Морфенова Онуфрия', $this->object->getInflectName('Морфенов Онуфрий', 0));
-		$this->assertEquals('Морфенова Евлампия', $this->object->getInflectName('Морфенов Евлампий', 0));
-	}
+	return $data;
+    }
 
 }
-
-?>
