@@ -39,6 +39,10 @@ class Inflect {
 			'я'			=> array('и', 'е', 'ю', 'ей', 'е'),
 			'й'			=> array('я', 'ю', 'я', 'ем', 'е'),
 		),
+		'first_exp'		=> array(
+			'Лев'			=> array('Льва', 'Льву', 'Льва', 'Львом', 'Льве'),
+			'Зоя'			=> array('Зои', 'Зое', 'Зою', 'Зоей', 'Зое'),
+		),
 		'last'		=> array(
 			'(ин|ын|ев|ёв|ов)а'	=> array('$1ой', '$1ой', '$1у', '$1ой', '$1ой'),
 			'(ин|ын|ев|ёв|ов)'	=> array('$1а', '$1у', '$1а', '$1ым', '$1е'),
@@ -163,6 +167,8 @@ class Inflect {
 			$this->firstName = preg_replace('/Пётр$/u', 'Петр', $this->firstName);
 
 			switch (true) {
+				case $this->replaceProcessing('first_exp', 'firstName'):
+					break;
 				case preg_match('/[еёиоуыэю]$/u', $this->firstName):
 				case preg_match('/[аеёиоуыэюя]а$/u', $this->firstName):
 				case preg_match('/[аёоуыэюя]я$/u', $this->firstName):
@@ -177,7 +183,7 @@ class Inflect {
 					$this->firstName = preg_replace('/ь$/u', $value[$this->case], $this->firstName);
 					break;
 				case $this->replaceProcessing('first', 'firstName'):
-					break;
+				    break;
 				default:
 					$value = array('а', 'у', 'а', 'ом', 'е');
 					$this->firstName .= $value[$this->case];
