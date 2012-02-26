@@ -39,10 +39,6 @@ class Inflect {
 			'я'			=> array('и', 'е', 'ю', 'ей', 'е'),
 			'й'			=> array('я', 'ю', 'я', 'ем', 'е'),
 		),
-		'first_f'	=> array(
-			'(ов)ь'			=> array('ви', 'ой', 'у', 'ой', 'ой'),	// ?
-			'ь'			=> array('и', 'и', 'ь', 'ью', 'и'),		// ?
-		),
 		'last'		=> array(
 			'(ин|ын|ев|ёв|ов)а'	=> array('$1ой', '$1ой', '$1у', '$1ой', '$1ой'),
 			'(ин|ын|ев|ёв|ов)'	=> array('$1а', '$1у', '$1а', '$1ым', '$1е'),
@@ -119,7 +115,7 @@ class Inflect {
 			case preg_match('/(ий|ый)$/u', $this->lastName):
 				return self::MALE;
 				break;
-			// by FirstName
+			//by FirstName
 			case preg_match('/[ая]$/u', $this->firstName):
 				return self::FEMALE;
 				break;
@@ -127,7 +123,6 @@ class Inflect {
 				return self::MALE;
 				break;
 		}
-
 		return null;
 	}
 
@@ -141,8 +136,7 @@ class Inflect {
 	 */
 	public function getPlural(array $titles, $number, $full = false) {
 	    $result = $titles[(($number % 10 == 1) && ($number % 100 != 11)) ? 0 : ((($number % 10 >= 2) && ($number % 10 <= 4) && (($number % 100 < 10) || ($number % 100 >= 20))) ? 1 : 2)];
-	    $result = $full ? $number . ' ' . $result : $result;
-	    return $result;
+	    return $full ? $number . ' ' . $result : $result;
 	}
 
 	protected function processingLastName() {
@@ -152,18 +146,12 @@ class Inflect {
 				case preg_match('/[аеёиоуыэюя]а$/u', $this->lastName):
 				case preg_match('/[ёоуыэю]я$/u', $this->lastName):
 				case preg_match('/[иы]х$/u', $this->lastName):
+				case $this->replaceProcessing('last', 'lastName'):
+				case $this->gender == self::MALE && $this->replaceProcessing('last_m', 'lastName'):
 					break;
-				default:
-					if($this->replaceProcessing('last', 'lastName')) {
-						break;
-					}
-					if ($this->gender == self::MALE) {
-						if($this->replaceProcessing('last_m', 'lastName')) {
-							break;
-						}
-						$value = array('а', 'у', 'а', 'ом', 'е');
-						$this->lastName .= $value[$this->case];
-					}
+				case $this->gender == self::MALE:
+					$value = array('а', 'у', 'а', 'ом', 'е');
+					$this->lastName .= $value[$this->case];
 					break;
 			}
 		}
@@ -188,10 +176,9 @@ class Inflect {
 					$value = array('и', 'и', 'ь', 'ью', 'и');
 					$this->firstName = preg_replace('/ь$/u', $value[$this->case], $this->firstName);
 					break;
+				case $this->replaceProcessing('first', 'firstName'):
+					break;
 				default:
-					if($this->replaceProcessing('first', 'firstName')) {
-						break;
-					}
 					$value = array('а', 'у', 'а', 'ом', 'е');
 					$this->firstName .= $value[$this->case];
 					break;
