@@ -15,7 +15,9 @@ $obj = new Inflect();
 
 #### Methods
 
-``getInflectName`` - Возвращает ФИО, в нужном падеже
+<ul>
+<li>
+<b>getInflectName</b> - Возвращает ФИО, в нужном падеже
 
 <ul>
 <li>Первый параметр должен содержать как минимум фамилию</li>
@@ -26,22 +28,27 @@ $obj = new Inflect();
 $obj->getInflectName('Иванов Иван Иванович', 0);  // Иванова Ивана Ивановича
 $obj->getInflectName('Кац Мария', 0);             // Кац Марии
 ```
+</li>
 
-``getGender`` - Возвращает пол по ФИО
+<li>
+<b>getGender</b> - Возвращает пол по ФИО
 
 ``` php
 $obj->getGender('Иванов Иван Иванович');  // male
 $obj->getGender('Иванова Ирина');         // female
 ```
+</li>
 
-``getPlural`` - Возвращает число в нужном формате
+<li>
+<b>getPlural</b> - Возвращает число в нужном формате
 
 ``` php
 $obj->getPlural(array('час', 'часа', 'часов'), 21, true);   // 21 час
 $obj->getPlural(array('час', 'часа', 'часов'), 22);         // часа
 $obj->getPlural(array('час', 'часа', 'часов'), 26);         // часов
 ```
-
+</li>
+</ul>
 
 ## Contributing
 
