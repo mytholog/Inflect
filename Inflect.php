@@ -3,6 +3,7 @@
  * Russian names inflection library 
  * 
  * @author Igor Gavrilov <igor.gavrilov@softline.ru>
+ * @link git://github.com/mytholog/Inflect.git
  * @version 0.0.1
  */
 class Inflect {
