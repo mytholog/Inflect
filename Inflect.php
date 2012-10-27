@@ -2,7 +2,7 @@
 /**
  * Russian names inflection library 
  * 
- * @author Igor Gavrilov <igor.gavrilov@softline.ru>
+ * @author Igor Gavrilov <mytholog@yandex.ru>
  * @link git://github.com/mytholog/Inflect.git
  * @version 0.0.1
  */
