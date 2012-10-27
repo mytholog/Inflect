@@ -1,6 +1,6 @@
 <?php
 /**
- * @author Igor Gavrilov <igor.gavrilov@softline.ru>
+ * @author Igor Gavrilov <mytholog@yandex.ru>
  */
 error_reporting(E_ALL ^ E_NOTICE);
 
