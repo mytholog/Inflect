@@ -10,6 +10,7 @@ class Inflect {
 	
 	const MALE	= 'male';
 	const FEMALE	= 'female';
+	const NEUTER	= 'neuter';
 
 	private $firstName;
 	private $lastName;
@@ -63,6 +64,29 @@ class Inflect {
 		)
 	);
 
+	private $nounEndingsMap = array(
+		self::MALE => array(
+			'(к|т)'			=> array('$1а',	'$1у',	'$1а',	'$1ом',	'$1е'),	// техник
+			'(ч|он|р|им)'		=> array('$1а',	'$1у',	'$1',	'$1ом',	'$1е'),	// топор
+			'(ый)'			=> array('ого',	'ому',	'ого',	'ым',	'ом'),	// учёный
+			'(ец)'			=> array('ца',	'цу',	'ца',	'цом',	'це'),	// певец
+			'(н|р)ь'		=> array('$1я',	'$1ю',	'$1я',	'$1ем',	'$1е'),	// конь
+		),
+		self::FEMALE => array(
+			'(а)'			=> array('ы',	'е',	'у',	'ой',	'е'),	// машина
+			'(я)'			=> array('и',	'е',	'ю',	'ей',	'и'),	// станция
+			'(сть)'			=> array('сти',	'сте',	'сть',	'стью',	'сти'),	// пряность
+			'(ь)'			=> array('и',	'е',	'ь',	'ью',	'е'),	// мелочь
+		),
+		self::NEUTER => array(
+			'(o)'			=> array('а',	'у',	'о',	'ом',	'е'),	// молоко
+			'(ще)'			=> array('ща',	'щу',	'ще',	'щем',	'ще'),	// чудовище
+			'(ё)'			=> array('я',	'ю',	'ё',	'ём',	'е'),	// копьё
+			'(ие)'			=> array('ия',	'ию',	'ие',	'ием',	'ии'),	// смирение
+			'(я)'			=> array('яни',	'яне',	'я',	'енем',	'мени'),// вымя
+		),
+	);
+
 	public function __construct() {
 		mb_internal_encoding("UTF-8");
 	}
@@ -93,6 +117,49 @@ class Inflect {
 				empty($this->firstName) ? '' : ' ' .$this->firstName,
 				empty($this->middleName) ? '' : ' ' .$this->middleName
 			);
+	}
+
+	/**
+	 * Возвращает просклоненное существительное в выбранном падеже
+	 * 
+	 * @param string $noun Существительное
+	 * @param int $case Падеж (0 - genitive, 1 - dative, 2 - accusative, 3 - instrumentative, 4 - prepositional)
+	 * @return string
+	 */
+	public function getInflectNoun($noun, $case) {
+		if (empty($noun)) {
+			return;
+		}
+
+		$this->case = $case;
+		$this->noun = $noun;
+		$this->gender = $this->getNounGender();
+		$this->processingNoun();
+
+		return $this->noun;
+	}
+
+	/**
+	 * Определение пола
+	 *
+	 * @param string $fullName OPTIONAL Фамилия Имя Отчество
+	 * @return string|null 
+	 */
+	public function getNounGender() {
+		switch (true) {
+			case preg_match('/(к|ч|он|ый|ст|р|ец|нь|рь|рт|им)$/u', $this->noun):
+				return self::MALE;
+				break;
+			case preg_match('/(а|я|сть|чь)$/u', $this->noun):
+				return self::FEMALE;
+				break;
+			case preg_match('/(о|ще|ё|ие|мя|е)$/u', $this->noun):
+				return self::NEUTER;
+				break;
+			default:
+				return self::MALE;
+		}
+		return null;
 	}
 
 	/**
@@ -201,6 +268,19 @@ class Inflect {
 			}
 			$this->middleName = preg_replace('/(Иль|Кузьм|Фом)ичем$/u', '$1ичом', $this->middleName);
 		}
+		return $this;
+	}
+
+	protected function processingNoun() {
+		$nounEndingsMap = $this->nounEndingsMap[$this->gender];
+
+		foreach($nounEndingsMap as $pattern => $replacement_array) {
+			$count = 0;
+			$this->noun = preg_replace('/'.$pattern.'$/u', $replacement_array[$this->case], $this->noun, 1, $count);
+			if ($count)
+				break;
+		}
+
 		return $this;
 	}
 
