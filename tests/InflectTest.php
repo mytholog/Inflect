@@ -40,6 +40,13 @@ class InflectTest extends PHPUnit_Framework_TestCase {
 	$this->assertEquals($b, $this->obj->getInflectName($a, 0));
     }
 
+    /**
+     * @dataProvider nounProvider 
+     */
+    public function testShouldReturnGenitiveName($a, $b) {
+	$this->assertEquals($b, $this->obj->getInflectNoun($a, 0));
+    }
+
     public function testShouldReturnRightPlural() {
 	$array = array('час', 'часа', 'часов');
 	$this->assertEquals('21 час', $this->obj->getPlural($array, 21, true));
@@ -57,6 +64,10 @@ class InflectTest extends PHPUnit_Framework_TestCase {
 
     public function genderFemaleProvider() {
 	return $this->parseFile('f_gender.csv');
+    }
+
+    public function nounProvider() {
+	return $this->parseFile('noun.csv');
     }
 
     protected function parseFile($file) {
