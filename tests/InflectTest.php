@@ -43,7 +43,7 @@ class InflectTest extends PHPUnit_Framework_TestCase {
     /**
      * @dataProvider nounProvider 
      */
-    public function testShouldReturnGenitiveName($a, $b) {
+    public function testShouldReturnNounGenitiveName($a, $b) {
 	$this->assertEquals($b, $this->obj->getInflectNoun($a, 0));
     }
 
