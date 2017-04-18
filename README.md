@@ -2,6 +2,8 @@
 
 Склонятор.
 
+[TOC]
+
 ## How to use Inflect
 
 #### Initializing
